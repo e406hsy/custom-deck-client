@@ -4,18 +4,20 @@
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'setting.dart';
+import 'setting_page.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const CustomDeckApplication());
 
-class MyApp extends StatelessWidget {
+class CustomDeckApplication extends StatelessWidget {
+  const CustomDeckApplication({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CustomDeck',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('CustomDeck'),
+          title: const Text('CustomDeck'),
           actions: [
             IconButton(
               onPressed: () {},
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
             )
           ],
         ),
-        body: Center(
+        body: const Center(
           child: Text('Hello World'),
         ),
       ),
