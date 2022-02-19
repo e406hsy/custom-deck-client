@@ -68,9 +68,9 @@ class _SettingFormFieldState extends State<_SettingFormField>
       showInSnackBar('잘못된 입력을 수정해주세요.');
     } else {
       form.save();
-      showInSnackBar('성공');
       _settingService.setIp((await setting).ip);
       _settingService.setPort((await setting).port);
+      showInSnackBar('성공');
     }
   }
 
@@ -145,7 +145,7 @@ class _SettingFormFieldState extends State<_SettingFormField>
                           initialValue: snapshot.data?.port.toString(),
                           restorationId: 'port_field',
                           textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               filled: true,
                               hintText: '24001',
                               labelText: 'port'),
@@ -166,7 +166,7 @@ class _SettingFormFieldState extends State<_SettingFormField>
                         Center(
                           child: ElevatedButton(
                             onPressed: _handleSubmitted,
-                            child: Text('제출'),
+                            child: const Text('제출'),
                           ),
                         ),
                       ],

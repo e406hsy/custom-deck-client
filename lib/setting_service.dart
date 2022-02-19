@@ -6,7 +6,6 @@ const portKey= 'custom_deck_server_port';
 
 class SettingData {
   SettingData(this.ip, this.port);
-
   String ip = '';
   int port = 0;
 }
