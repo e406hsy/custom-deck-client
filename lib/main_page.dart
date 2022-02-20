@@ -12,10 +12,8 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   late _LoadState _loadState;
-  late Map<int, Map<int, Button>> _buttons;
+  late CustomDeckPage _page;
   final ButtonRepository _buttonRepository = ButtonRepository.getInstance();
-  late int xCount;
-  late int yCount;
 
   @override
   void initState() {
@@ -23,9 +21,7 @@ class _MainPageState extends State<MainPage> {
     _buttonRepository
         .getPage()
         .then((value) => setState(() {
-              xCount = value.xCount;
-              yCount = value.yCount;
-              _buttons = value.buttons;
+              _page = value;
               _loadState = _LoadState.successful;
             }))
         .onError((error, stackTrace) => setState(() {
@@ -40,7 +36,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     switch (_loadState) {
       case _LoadState.successful:
-        return _ButtonGridView(xCount, yCount, _buttons);
+        return _ButtonGridView(_page);
       case _LoadState.before:
         return const Center(child: CircularProgressIndicator());
       case _LoadState.failure:
@@ -55,36 +51,34 @@ class _MainPageState extends State<MainPage> {
 enum _LoadState { before, failure, successful }
 
 class _ButtonGridView extends StatelessWidget {
-  const _ButtonGridView(this.xCount, this.yCount, this._buttons);
+  const _ButtonGridView(this._page);
 
-  final int xCount;
-  final int yCount;
-  final Map<int, Map<int, Button>> _buttons;
+  final CustomDeckPage _page;
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: xCount,
+        crossAxisCount: _page.xCount,
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
         childAspectRatio: MediaQuery.of(context).size.width /
             (MediaQuery.of(context).size.height / 1.4) /
-            xCount *
-            yCount,
+            _page.xCount *
+            _page.yCount,
       ),
       padding: const EdgeInsets.all(8),
-      itemCount: xCount * yCount,
+      itemCount: _page.size,
       itemBuilder: (context, index) => _getItem(index),
       physics: const NeverScrollableScrollPhysics(),
     );
   }
 
   _GridButtonItem _getItem(int index) {
-    var xIndex = index ~/ xCount;
-    var yIndex = index % xCount;
+    var xIndex = index ~/ _page.xCount;
+    var yIndex = index % _page.xCount;
 
-    Button? button = _buttons[xIndex]?[yIndex];
+    Button? button = _page.buttons[xIndex]?[yIndex];
 
     return button != null ? _GridButtonItem(button) : _GridButtonItem.empty;
   }
