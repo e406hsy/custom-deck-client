@@ -14,14 +14,18 @@ class _MainPageState extends State<MainPage> {
   late _LoadState _loadState;
   late Map<int, Map<int, Button>> _buttons;
   final ButtonRepository _buttonRepository = ButtonRepository.getInstance();
+  late int xCount;
+  late int yCount;
 
   @override
   void initState() {
     _loadState = _LoadState.before;
     _buttonRepository
-        .getButtons()
+        .getPage()
         .then((value) => setState(() {
-              _buttons = value;
+              xCount = value.xCount;
+              yCount = value.yCount;
+              _buttons = value.buttons;
               _loadState = _LoadState.successful;
             }))
         .onError((error, stackTrace) => setState(() {
@@ -36,7 +40,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     switch (_loadState) {
       case _LoadState.successful:
-        return _ButtonGridView(_buttons);
+        return _ButtonGridView(xCount, yCount, _buttons);
       case _LoadState.before:
         return const Center(child: CircularProgressIndicator());
       case _LoadState.failure:
@@ -51,28 +55,40 @@ class _MainPageState extends State<MainPage> {
 enum _LoadState { before, failure, successful }
 
 class _ButtonGridView extends StatelessWidget {
-  const _ButtonGridView(this._buttons);
+  const _ButtonGridView(this.xCount, this.yCount, this._buttons);
 
+  final int xCount;
+  final int yCount;
   final Map<int, Map<int, Button>> _buttons;
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 4,
-      mainAxisSpacing: 8,
-      crossAxisSpacing: 8,
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: xCount,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+        childAspectRatio: MediaQuery.of(context).size.width /
+            (MediaQuery.of(context).size.height / 1.4) /
+            xCount *
+            yCount,
+      ),
       padding: const EdgeInsets.all(8),
-      childAspectRatio: 1,
-      children: getItems(),
+      itemCount: getItems().length,
+      itemBuilder: (context, index) {
+        var items = getItems();
+        return items[index];
+      },
+      physics: const NeverScrollableScrollPhysics(),
     );
   }
 
   List<_GridButtonItem> getItems() {
     List<_GridButtonItem> list = [];
 
-    for (var i = 0; i < 2; i++) {
+    for (var i = 0; i < xCount; i++) {
       Map<int, Button>? xAxisButtons = _buttons[i];
-      for (var j = 0; j < 8; j++) {
+      for (var j = 0; j < yCount; j++) {
         if (xAxisButtons == null) {
           list.add(_GridButtonItem.empty);
         } else {
@@ -110,16 +126,26 @@ class _GridButtonItem extends StatelessWidget {
           foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
           overlayColor: MaterialStateProperty.resolveWith<Color?>(
             (Set<MaterialState> states) {
-              if (states.contains(MaterialState.hovered))
+              if (states.contains(MaterialState.hovered)) {
                 return Colors.blue.withOpacity(0.04);
+              }
               if (states.contains(MaterialState.focused) ||
-                  states.contains(MaterialState.pressed))
+                  states.contains(MaterialState.pressed)) {
                 return Colors.blue.withOpacity(0.12);
+              }
               return null; // Defer to the widget's default.
             },
           ),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: const BorderSide(color: Colors.red))),
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
         ),
         onPressed: () {},
-        child: Text('id $id'));
+        child: Text(
+          'id $id',
+          style: const TextStyle(color: Colors.black),
+        ));
   }
 }
