@@ -74,46 +74,30 @@ class _ButtonGridView extends StatelessWidget {
             yCount,
       ),
       padding: const EdgeInsets.all(8),
-      itemCount: getItems().length,
-      itemBuilder: (context, index) {
-        var items = getItems();
-        return items[index];
-      },
+      itemCount: xCount * yCount,
+      itemBuilder: (context, index) => _getItem(index),
       physics: const NeverScrollableScrollPhysics(),
     );
   }
 
-  List<_GridButtonItem> getItems() {
-    List<_GridButtonItem> list = [];
+  _GridButtonItem _getItem(int index) {
+    var xIndex = index ~/ xCount;
+    var yIndex = index % xCount;
 
-    for (var i = 0; i < xCount; i++) {
-      Map<int, Button>? xAxisButtons = _buttons[i];
-      for (var j = 0; j < yCount; j++) {
-        if (xAxisButtons == null) {
-          list.add(_GridButtonItem.empty);
-        } else {
-          Button? button = xAxisButtons[j];
-          if (button == null) {
-            list.add(_GridButtonItem.empty);
-          } else {
-            list.add(_GridButtonItem(button));
-          }
-        }
-      }
-    }
+    Button? button = _buttons[xIndex]?[yIndex];
 
-    return list;
+    return button != null ? _GridButtonItem(button) : _GridButtonItem.empty;
   }
 }
 
 class _GridButtonItem extends StatelessWidget {
-  const _GridButtonItem._(this.id);
-
   static _GridButtonItem empty = const _GridButtonItem._(-1);
 
-  final int id;
-
   _GridButtonItem(Button button) : id = button.id;
+
+  const _GridButtonItem._(this.id);
+
+  final int id;
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +123,7 @@ class _GridButtonItem extends StatelessWidget {
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
-                  side: const BorderSide(color: Colors.red))),
+                  side: const BorderSide(color: Colors.blue))),
           backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
         ),
         onPressed: () {},
