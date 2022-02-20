@@ -1,4 +1,4 @@
-import 'package:custom_deck/setting_service.dart';
+import 'package:custom_deck/setting/setting_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

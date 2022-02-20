@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.soonyong.custom_deck">
    <application
-        android:label="custom_deck"
+        android:label="Custom Deck"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
