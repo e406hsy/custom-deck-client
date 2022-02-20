@@ -1,6 +1,10 @@
-import 'dart:io';
+class Button {
+  Button(this._id);
 
-class Button {}
+  final int _id;
+
+  int get id => _id;
+}
 
 class ButtonRepositoryImpl extends ButtonRepository {
   @override
@@ -21,12 +25,12 @@ abstract class ButtonRepository {
 class MockButtonRepository extends ButtonRepository {
   @override
   Future<Map<int, Map<int, Button>>> getButtons() async {
-    await Future.delayed(Duration(seconds: 50));
-
+    await Future.delayed(const Duration(seconds: 15));
 
     return {
-      1: {1: Button(), 2: Button()},
-      2: {1: Button()}
+      0: {0: Button(1), 1: Button(2)},
+      1: {0: Button(3), 1: Button(4)},
+      2: {0: Button(5)}
     };
   }
 }
