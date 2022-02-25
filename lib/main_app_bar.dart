@@ -1,12 +1,16 @@
+import 'dart:developer';
+
 import 'package:animations/animations.dart';
+import 'package:custom_deck/setting/setting_page.dart';
 import 'package:flutter/material.dart';
 
-import 'package:custom_deck/setting/setting_page.dart';
-
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const MainAppBar({Key? key})
+  const MainAppBar({Key? key, required VoidCallback onRefresh})
       : preferredSize = const Size.fromHeight(kToolbarHeight),
+        _onRefresh = onRefresh,
         super(key: key);
+
+  final VoidCallback _onRefresh;
 
   @override
   final Size preferredSize;
@@ -17,7 +21,10 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: const Text('CustomDeck'),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            log('debug: called onPressed');
+            _onRefresh();
+          },
           icon: const Icon(Icons.refresh),
         ),
         PopupMenuButton<TextButton>(

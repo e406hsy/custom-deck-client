@@ -7,17 +7,23 @@ class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
-  _MainPageState createState() => _MainPageState();
+  MainPageState createState() => MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class MainPageState extends State<MainPage> {
   late _LoadState _loadState;
   late CustomDeckPage _page;
   final ButtonRepository _buttonRepository = ButtonRepository.getInstance();
 
-  @override
-  void initState() {
-    _loadState = _LoadState.before;
+  void refresh() {
+    log('debug : MainPageState refresh called');
+    setState(() {
+      _loadState = _LoadState.before;
+    });
+    loadButtons();
+  }
+
+  void loadButtons() {
     _buttonRepository
         .getPage()
         .then((value) => setState(() {
@@ -29,6 +35,12 @@ class _MainPageState extends State<MainPage> {
               log('error : $error');
               debugPrintStack(stackTrace: stackTrace);
             }));
+  }
+
+  @override
+  void initState() {
+    _loadState = _LoadState.before;
+    loadButtons();
     super.initState();
   }
 
