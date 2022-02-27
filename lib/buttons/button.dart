@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:custom_deck/connection/socket_service.dart';
+
 class Button {
   Button(this._id);
 
@@ -25,22 +29,27 @@ class ButtonRepositoryImpl extends ButtonRepository {
 }
 
 abstract class ButtonRepository {
-  static ButtonRepository instance = MockButtonRepository();
-
-  static ButtonRepository getInstance() => instance;
-
   Future<CustomDeckPage> getPage();
 }
 
 class MockButtonRepository extends ButtonRepository {
   @override
   Future<CustomDeckPage> getPage() async {
-    await Future.delayed(const Duration(seconds: 15));
-
     return CustomDeckPage(4, 2, {
       0: {0: Button(1), 1: Button(2)},
       1: {0: Button(3), 1: Button(4)},
       2: {0: Button(5)}
     });
+  }
+}
+
+class ButtonActionService {
+  ButtonActionService(WebSocketService webSocketService)
+      : _webSocketService = webSocketService;
+
+  final WebSocketService _webSocketService;
+
+  void doAction(Button button) {
+    _webSocketService.requestAction(jsonEncode(button));
   }
 }

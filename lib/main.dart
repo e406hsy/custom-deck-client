@@ -3,11 +3,24 @@
 // found in the LICENSE file.
 import 'dart:developer';
 
+import 'package:custom_deck/buttons/button.dart';
+import 'package:custom_deck/framework/application_context.dart';
 import 'package:custom_deck/main_app_bar.dart';
 import 'package:custom_deck/main_page.dart';
+import 'package:custom_deck/setting/setting_service.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(CustomDeckApplication());
+void main() {
+
+  initialize();
+
+  runApp(CustomDeckApplication());
+}
+
+void initialize() {
+  ApplicationContext.mapObject(ButtonRepository, MockButtonRepository());
+  ApplicationContext.map(SettingService, () => SettingService());
+}
 
 class CustomDeckApplication extends StatelessWidget {
   final GlobalKey<MainPageState> _key = GlobalKey();

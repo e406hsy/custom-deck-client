@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:custom_deck/framework/application_context.dart';
 import 'package:custom_deck/setting/setting_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +26,7 @@ class _SettingFormField extends StatefulWidget {
 
 class _SettingFormFieldState extends State<_SettingFormField>
     with RestorationMixin {
-  final SettingService _settingService = SettingService.getInstance();
+  final SettingService _settingService = ApplicationContext.get(SettingService);
   late Future<SettingData> setting;
 
   late FocusNode _ip, _port;
@@ -112,6 +115,7 @@ class _SettingFormFieldState extends State<_SettingFormField>
             return const CircularProgressIndicator();
           default:
             if (snapshot.hasError) {
+              log('error: $snapshot ${snapshot.error}');
               return Text('Error: ${snapshot.error}');
             } else {
               return Form(

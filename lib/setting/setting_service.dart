@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 const ipKey= 'custom_deck_server_ip';
@@ -11,13 +13,10 @@ class SettingData {
 }
 
 class SettingService {
-  static SettingService instance = SettingService();
-
-  static SettingService getInstance() => instance;
-
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future<String> getIp() async {
+    log('debug: SettingService getIp called');
     var value = (await _prefs).getString(ipKey);
     return value ?? '';
   }

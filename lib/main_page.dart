@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:custom_deck/buttons/button.dart';
+import 'package:custom_deck/framework/application_context.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -13,7 +14,7 @@ class MainPage extends StatefulWidget {
 class MainPageState extends State<MainPage> {
   late _LoadState _loadState;
   late CustomDeckPage _page;
-  final ButtonRepository _buttonRepository = ButtonRepository.getInstance();
+  final ButtonRepository _buttonRepository = ApplicationContext.get(ButtonRepository);
 
   void refresh() {
     log('debug : MainPageState refresh called');
